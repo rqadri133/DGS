@@ -1,0 +1,63 @@
+﻿@model DGS.Models.LoginModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+    <!-- end header -->
+    <div>
+        <!-- start page -->
+        <div>
+            <div>
+                @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+                {
+             
+                    <div class="matchContent">
+                        <section>
+                            <fieldset>
+                                <legend>Log in Form</legend>
+                                <ol>
+                                    <li>
+                                        @Html.LabelFor(m => m.UserName)
+                                        @Html.TextBoxFor(m => m.UserName)
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </li>
+                                    <li>
+                                        @Html.LabelFor(m => m.selPassword)
+                                        @Html.PasswordFor(m => m.selPassword)
+                                        @Html.ValidationMessageFor(m => m.selPassword)
+                                    </li>
+                                    <li>
+                                        @Html.CheckBoxFor(m => m.RememberMe)
+                                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                                    </li>
+                                    <li>
+                                        <button  id="btnLogin" class="btn btn-primary" type="submit"> Login    </button>
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("Register", "Register") if you don't have an account.
+                                    </li>
+
+                                </ol>
+                            </fieldset>
+
+
+                        </section>
+                    </div>
+                 }
+            </div>
+            <!-- end sidebars -->
+            <div style="clear: both;">&nbsp;</div>
+        </div>
+        <!-- end page -->
+
+    </div>
+
+
+@section Scripts {
+
+
+   <script src="~/Scripts/jquery-1.10.2.js"></script>
+    
+}

@@ -1,0 +1,120 @@
+﻿@model DGS.Models.PortalSecurityControl
+@{
+    ViewBag.Title = "Register User";
+}
+
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <section class="matter">
+        <div class="col-md-offset-1">
+            <div class="widget wviolet">
+                <div class="page-header">
+                    <h3>
+                        <span class="glyphicon glyphicon-user">
+                            Add User
+                        </span>
+                    </h3>
+                </div>
+                <table>
+
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.UserID)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.UserID)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.EmailAddress)
+
+
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.EmailAddress)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.ConfirmEmailAddress)
+
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.ConfirmEmailAddress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.NewPassword)
+
+
+                        </td>
+                        <td>
+                            @Html.PasswordFor(m => m.NewPassword)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.LabelFor(m => m.ConfirmPassword)</td>
+                        <td>@Html.PasswordFor(m => m.ConfirmPassword)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                           &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            </td>
+
+                    </tr>  
+              
+                    <tr>
+                        <td>
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+
+                        </td>
+                        <td>
+                            <div align="right">
+                                <button id="btnSaveUser" type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-save"></span> Submit!
+                                </button>
+                                <button id="btnCancel" type="reset" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-erase"></span> Cancel
+                                </button>
+
+                            </div>
+                            </td>
+                    </tr>
+
+                </table>
+
+
+
+            </div>
+
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+            </div>
+
+    
+           </div>
+                        
+    
+
+                
+                
+
+                
+              
+          </section>
+}
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }

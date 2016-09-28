@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNet.Identity
+
+@if (Session["UserId"] != null)
+{
+    @Html.AntiForgeryToken()
+    
+    <div id="mainMenu" class="filterDropdown">
+        <div class="filterSelector">
+            <div class="filterbtnteam filterteamheader">
+                @Html.ActionLink("Document Information", "UploadView", "Account", routeValues: null, htmlAttributes: new { id = "documentlinkOkay" })
+                @Html.ActionLink("Translation Information", "TranslationView", "Account", routeValues: null, htmlAttributes: new { id = "translationviewlink" })
+                @Html.ActionLink("Download Document", "DocumentDownloadView", "Account", routeValues: null, htmlAttributes: new { id = "dlink" })
+                @Html.ActionLink("Delete Document", "DocumentDeleteView", "Account", routeValues: null, htmlAttributes: new { id = "ddlink" })
+
+                <div align="right" class="btn btn-danger">
+
+                    @Html.ActionLink("LogOff", "LogOff", "Account", routeValues: "Account/LogOff", htmlAttributes: new { id = "logOffLink" })
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+else
+{
+    @Html.AntiForgeryToken()
+
+    <div id="mainMenuElse" class="filterDropdown">
+        <div class="filterSelector">
+            <div class="filterbtnteam filterteamheader">
+                @Html.ActionLink("Home", "Index", "Home", routeValues: null, htmlAttributes: new { id = "linkHome" })
+                @Html.ActionLink("Add User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "resourceLink" })
+            </div>
+        </div>
+    </div>
+
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery.signalR-2.1.2.js"></script>
+     <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+
+    <script>
+
+
+
+        $document.ready(function () {
+
+            AddAntiForgeryToken = function (data) {
+                data.__RequestVerificationToken = $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val();
+                return data;
+            };
+
+            $.ajax({
+                type: "post",
+                dataType: "html",
+                url: $(this).attr("rel"),
+                data: AddAntiForgeryToken({ id: parseInt($(this).attr("title")) }),
+                success: function (response) {
+                    // ....
+                }
+            });
+
+
+            function nextBackground() {
+                body.css(
+                    'background',
+                backgrounds[current = ++current % backgrounds.length]);
+
+                setTimeout(nextBackground, 500);
+            }
+            setTimeout(nextBackground, 500);
+            body.css('background', backgrounds[0]);
+        });
+
+
+
+    </script>
+}
+

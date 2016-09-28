@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+@using (Html.BeginForm("Login", "Login", FormMethod.Post))
+{
+    <section class="matter">
+        <div class="col-md-offset-1">
+            <div class="widget wviolet">
+                <div class="page-header">
+                    <h3>
+                        <span class="glyphicon glyphicon-user">
+                            Login
+                        </span>
+                    </h3>
+                </div>
+
+                <table>
+                    <tr>
+                        <td>
+                            <div id="name-group" class="form-group">
+                                <label>User Name</label>
+                                <input id="userId" type="text" name="name" class="form-control">
+                                <span class="help-block"></span>
+                            </div>
+
+                            <!-- SUPERHERO NAME -->
+                            <div id="superhero-group" class="form-group">
+                                <label>Password</label>
+                                <input id="pwd" type="password" name="description" class="form-control">
+                                <span class="help-block"></span>
+                            </div>
+                            <div>
+                                <label class="label label-primary">
+                                    Click
+                                    @Html.ActionLink("Add User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "resourceLink" })
+                                    to Register
+                                </label>
+                                <label id="errorMessage" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+
+                        </td>
+
+                    </tr>
+                    <!-- SUBMIT BUTTON -->
+                    <tr>
+
+                        <td>
+
+                            <button id="btnLogin" type="button" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-save"></span> Submit!
+                            </button>
+                            <button id="btnCancel" type="reset" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-erase"></span> Cancel
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="widget-foot">
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+    </section>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery-2.1.4.min")
+    @Scripts.Render("~/bundles/jquery-2.1.4")
+
+    <script>
+        $(document).ready(function () {
+
+            var _userId = "";
+            var _password = "";
+
+            /* Custom Paging not a third party */
+            function Login() {
+                /** testing data model **/
+                var _remainingPages;
+                var requestTos = {};
+                requestTos.url = "/Account/Login";
+                requestTos.type = "POST";
+                cache: false,
+                requestTos.data = { userId: $("#userId").val(), pwd: $("#pwd").val() };
+                requestTos.success = function (userId) {
+
+                    if (userId != "") {
+                        window.location("Account/UploadView");
+                    }
+                    else {
+                        $("#errorMessage").text("User ID or Password Not Correct");
+                    }
+                };
+                requestTos.error = function () {
+
+                    $("#errorMessage").text("User ID or Password Not Correct");
+                };
+                $.ajax(requestTos);
+
+
+
+
+            };
+
+
+            $("#btnLogin").click(function () {
+
+                Login();
+
+
+
+
+
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+
+
+}
+

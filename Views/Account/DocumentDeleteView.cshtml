@@ -1,0 +1,168 @@
+﻿@model DGS.Models.DocumentBlobModel
+	
+
+
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) 
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+    <div class="widget wviolet">
+        <div class="page-header">
+            <h3>
+                <span class="glyphicon glyphicon-erase">
+                    Delete  Document
+                </span>
+            </h3>
+        </div>
+        <section>
+
+    <table>
+            
+            
+               <tr>
+                    <td>
+                        @Html.Label("Select Document")
+                    </td>
+                     <td>
+                        @Html.DropDownList("iDocumentid", new List<SelectListItem>() { new SelectListItem() { Text = "Select", Value = "Select" } })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Select Document Server")
+
+                    </td>
+                    <td>
+
+                          @Html.DropDownListFor(m => m.iDocumentServerid, Model.AvailableServers)
+                    </td>
+
+                </tr>
+        <tr>
+            <td>
+                &nbsp;&nbsp;&nbsp;
+
+
+            </td>
+
+        </tr>
+               <tr>
+                   <td>
+
+                       &nbsp;&nbsp;&nbsp;
+
+                   </td>
+                   <td>
+                       <div align="right">
+
+                           <table>
+                               <tr>
+                                   <td>
+                                       <button id="btnDelete" class="btn btn-danger" type="submit"> Delete </button>
+                                   </td>
+                               </tr>
+                           </table>
+
+                       </div>
+
+                   </td>
+
+
+               </tr>
+         
+
+        
+
+        </section>
+
+        </div>
+
+}
+
+        @section Scripts {
+            <link rel="stylesheet" href="~/jqwidgets-ver3.7.1/jqwidgets/styles/jqx.base.css" type="text/css" />
+
+            @Scripts.Render("~/bundles/jqueryval")
+            @Scripts.Render("~/bundles/modernizr")
+            <script src="~/Scripts-ui/ui/jquery-ui.js"></script>
+            <script src="~/Scripts-ui/ui/jquery.ui.core.js"></script>
+            <script src="~/Scripts-ui/ui/jquery.ui.widget.js"></script>
+            <script src="~/Scripts-ui/ui/jquery.ui.progressbar.js"></script>
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/scripts/jquery-1.11.1.min.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxcore.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxdata.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxbuttons.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxscrollbar.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxmenu.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.edit.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.selection.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxlistbox.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxdropdownlist.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxcheckbox.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxcalendar.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxnumberinput.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/jqxdatetimeinput.js"></script>
+
+            <script type="text/javascript" src="~/jqwidgets-ver3.7.1/jqwidgets/globalization/globalize.js"></script>
+            <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+            <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+
+
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#iDocumentid").prop("disabled", true);
+                    $("#iDocumentServerid").change(function () {
+                        if ($("#iDocumentServerid").val() != "Select") {
+                            var documentServerOptions = {};
+                            documentServerOptions.url = "/Account/getDocumentJson/";
+                            documentServerOptions.type = "POST";
+                            cache: false,
+                            documentServerOptions.data = { serverId: $("#iDocumentServerid").val() };
+                            documentServerOptions.success = function (DocumentList) {
+                                $("#iDocumentid").empty();
+                                var markup = "";
+
+                                for (var i = 0; i < DocumentList.length; i++) {
+                                    markup += "<option value=" + DocumentList[i].Value + ">" + DocumentList[i].Text + "</option>";
+                                }
+                                $("#iDocumentid").append(markup);
+
+                                $("#iDocumentid").prop("disabled", false);
+                            };
+                            documentServerOptions.error = function () { alert("Error in Getting Documents!!"); };
+                            $.ajax(documentServerOptions);
+                        }
+                        else {
+                            $("#iDocumentid").empty();
+                            $("#iDocumentid").prop("disabled", true);
+                        }
+                    });
+
+
+
+                });
+            </script>
+        }
+
+
+
+

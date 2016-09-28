@@ -1,0 +1,282 @@
+﻿@model DGS.Models.DocumentBlobModel
+@{
+    ViewBag.Title = "Select and Translate Document";
+}
+
+<hgroup class="title">
+    <h2>.</h2>
+</hgroup>
+
+
+
+
+@using (Html.BeginForm("TranslationView", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <section class="matter">
+        <div class="col-md-offset-1">
+            <div class="widget wviolet">
+                <div class="page-header">
+                    <h3>
+                        <span class="glyphicon glyphicon-book">
+                            Translate Document
+                        </span>
+                    </h3>
+                </div>
+                <div class="container">
+                <table>
+                    <tr>
+                        <td>
+                            <div>
+                                @Html.Label("Select Document")
+                            </div>
+
+                        </td>
+                        <td class="dropdown-big">
+                            @Html.DropDownList("iDocumentid", new List<SelectListItem>() { new SelectListItem() { Value = "Select", Text = "Select", Selected = true } })
+
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div>
+                                @Html.LabelFor(m => m.iDocumentServerid)
+                             
+                           </div>
+
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.iDocumentServerid, Model.AvailableServers, "--Select Source Server--")
+
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+
+                                @Html.LabelFor(m => m.iDocCultureid)
+                        
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.iDocCultureid, Model.AvailableCultures, "--Select Source Culture--")
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+
+                                @Html.LabelFor(m => m.iCultureid)
+                            
+
+                            </div>
+
+
+                        </td>
+                        <td class="dropdown" >
+                            @Html.DropDownListFor(m => m.iCultureid, Model.AvailableCultures, "--Select Destination Culture--")
+
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                @Html.Label("Destination Server")
+                
+
+
+
+                            </div>
+
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.iDocumentServerDestinationid, Model.AvailableServers, "--Select Document Culture--")
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            &nbsp;
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                <progress  id="pgbar" value="5" max="100" />
+                                <label  id="result"> Initializing...  </label>
+                                
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td>
+                            &nbsp;
+                            &nbsp;
+
+                        </td>
+                        <td>
+                            <div align="right">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button id="btnTranslate" class="btn btn-primary" type="submit"> Translate </button>
+                                            <button id="btnCancel" class="btn btn-danger" type="reset"> Cancel Selections </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+
+                            </div>
+   
+                        </td>
+                        &nbsp;
+                        
+                    </tr>
+
+
+                </table>
+             
+        </div>
+    
+
+
+            </div>
+        </div>
+    </section>
+
+
+}
+
+
+@section Scripts {
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+<script src="Scripts/jquery-ui-1.11.4.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/signalR/hubs"></script>
+<script src="/signalR/hubs"></script>
+
+
+
+
+    
+   
+    <script type="text/javascript">
+
+        var connection = $.connection;
+           
+
+        $(document).ready(function () {
+
+
+            $("#iDocumentid").prop("disabled", true);
+            $("#iDocumentServerid").change(function () {
+                if ($("#iDocumentServerid").val() != "Select") {
+                    var documentServerOptions = {};
+                    documentServerOptions.url = "/Account/getDocumentJson/";
+                    documentServerOptions.type = "POST";
+                    cache: false,
+                    documentServerOptions.data = { serverId: $("#iDocumentServerid").val() };
+                    documentServerOptions.success = function (DocumentList) {
+                        $("#iDocumentid").empty();
+                        var markup = "";
+
+                        for (var i = 0; i < DocumentList.length; i++) {
+                            markup += "<option value=" + DocumentList[i].Value + ">" + DocumentList[i].Text + "</option>";
+                        }
+                        $("#iDocumentid").append(markup);
+
+                        $("#iDocumentid").prop("disabled", false);
+                    };
+                    documentServerOptions.error = function () { alert("Error in Getting Documents!!"); };
+                    $.ajax(documentServerOptions);
+                }
+                else {
+                    $("#iDocumentid").empty();
+                    $("#iDocumentid").prop("disabled", true);
+                }
+            });
+
+
+            $("#btnTranslate").click(function () {
+               
+              
+                
+                var progressNotifier =connection.progressHub;
+
+                var responsetime = 45;
+                var cultureId = $("#iCultureid > option:selected").attr("value");
+                var documentName = $("#iDocumentid > option:selected").attr("Text");
+                var destinationCultureId = $("#iDocCultureid > option:selected").attr("value");
+
+                var serversourceId = $("#iDocumentServerid > option:selected").attr("value");
+
+                var serverDestinationId = $("#iDocumentServerDestinationid > option:selected").attr("value");
+
+                var documentId = $("#iDocumentid > option:selected").attr("value");
+
+                // initialize the connection to the server
+
+                // client-side sendMessage function that will be called from the server-side
+                progressNotifier.client.sendMessage = function (message, counter) {
+                    // update progress
+                    UpdateProgress(message, counter, progressNotifier);
+                };
+
+                // establish the connection to the server and start server-side operation
+                connection.hub.start().done(function () {
+                    // call the method CallLongOperation defined in the Hub
+                    progressNotifier.server.translateDocument();
+
+                });
+
+
+
+            });
+
+
+
+
+
+        });
+
+        function UpdateProgress(message, counter, connection) {
+            // get result div
+            // set message
+            $("#result").text(message);
+            // get progress bar
+
+            $("#pgbar").val(counter);
+            if (message == "Completed") {
+                connection.disconnect();
+            }
+        }
+
+
+
+    </script>
+}
+
+

@@ -1,0 +1,90 @@
+﻿@model DGS.Models.DocumentModel
+
+@{
+    ViewBag.Title = "Upload Document";
+
+
+}
+
+
+
+@using (Html.BeginForm("UploadView", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+    @Html.AntiForgeryToken()
+
+
+
+    <section class="matter">
+        <div class="col-md-offset-1">
+            <div class="widget wviolet">
+                <div class="page-header">
+                    <h3>
+                        <span class="glyphicon glyphicon-upload">
+                            Upload Document
+                        </span>
+                    </h3>
+                </div>
+
+                <table>
+                    <tr>
+                        <td>
+                            <div>
+                                <label>Select File</label>
+                                &nbsp;
+                                <input class="btn btn-success" type="file" name="file" />
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.DocumentType)
+
+                            @Html.DropDownListFor(x => x.DocumentType, Model.DocuumentTypeItems)
+
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => m.SelectDocumentServer)
+                            @Html.DropDownListFor(m => m.SelectDocumentServer, Model.ServerItems)
+                            @Html.ValidationMessageFor(m => m.SelectDocumentServer)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            &nbsp;
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        &nbsp;
+                        <td>
+                            <div align="right">
+                                &nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-primary" type="submit"> Upload File </button>
+                                <button class="btn btn-danger" type="reset"> Cancel   </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+    }
+
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+
+
+                }

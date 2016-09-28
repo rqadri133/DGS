@@ -1,0 +1,108 @@
+﻿@model DGS.Models.DocumentBlobModel
+@{
+    ViewBag.Title = "Download Your Translated Document";
+}
+
+@using (Html.BeginForm("DocumentDownloadView", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div class="col-md-offset-1">
+            <div class="widget wviolet">
+                <div class="page-header">
+                    <h3>
+                        <span class="glyphicon glyphicon-download">
+                           Download Document
+                        </span>
+                    </h3>
+                </div>
+    
+                <table>
+                    <tr>
+                        <td>
+
+                            @Html.Label("Select Document")
+                            </td>
+                        <td>
+
+                            @Html.DropDownList("iDocumentid", new List<SelectListItem>() { new SelectListItem() { Text = "Select", Value = "Select" } })
+
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("Select Document Server")
+                        </td>
+
+                        <td>
+                            @Html.DropDownListFor(m => m.iDocumentServerid, Model.AvailableServers)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;&nbsp;&nbsp;
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          &nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <div align="right">
+                                <button class="btn btn-primary"> Download </button>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </table>
+            
+            
+                        </div>
+            </div>
+
+    </div>
+}
+@section Scripts {
+
+    <script src="~/Scripts/jquery-1.11.1.js" />
+    <script src="~/Scripts/jquery-1.11.1.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#iDocumentid").prop("disabled", true);
+            $("#iDocumentServerid").change(function () {
+                if ($("#iDocumentServerid").val() != "Select") {
+                    var documentServerOptions = {};
+                    documentServerOptions.url = "/Account/getDocumentJson/";
+                    documentServerOptions.type = "POST";
+                    cache: false,
+                    documentServerOptions.data = { serverId: $("#iDocumentServerid").val() };
+                    documentServerOptions.success = function (DocumentList) {
+                        $("#iDocumentid").empty();
+                        var markup = "";
+
+                        for (var i = 0; i < DocumentList.length; i++) {
+                            markup += "<option value=" + DocumentList[i].Value + ">" + DocumentList[i].Text + "</option>";
+                        }
+                        $("#iDocumentid").append(markup);
+
+                        $("#iDocumentid").prop("disabled", false);
+                    };
+                    documentServerOptions.error = function () { alert("Error in Getting Documents!!"); };
+                    $.ajax(documentServerOptions);
+                }
+                else {
+                    $("#iDocumentid").empty();
+                    $("#iDocumentid").prop("disabled", true);
+                }
+            });
+
+
+
+        });
+    </script>
+}
+
